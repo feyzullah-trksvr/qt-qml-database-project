@@ -57,3 +57,4 @@ Toplam tutarı doğrulayacak.
 Analiz edilen bu veriler mevcut QML expensePopup formuna (ve subItemsModel içerisine) saniyeler içinde otomatik olarak doldurulacak. Kullanıcı sadece göz ucuyla kontrol edip "Kaydet" diyecek.
 Not: Bu görev implemente edilirken QML tarafında Kamera entegrasyonu (Qt Multimedia) ve C++ tarafında bir Network Manager (QNetworkAccessManager) yazılarak REST API isteklerinin yönetilmesi gerekecektir.
 GitHub ogreniyorum.
+Sifre hatirlama testi.
