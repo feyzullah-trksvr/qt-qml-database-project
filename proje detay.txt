@@ -1,0 +1,58 @@
+🏠 Ev Bütçem - Proje Özeti ve Geliştirici Rehberi
+Bu belge, Ev Bütçem (Household Expense Tracker) projesinin mevcut mimarisini, teknik altyapısını, sağladığı özellikleri ve gelecekteki görevleri başka bir geliştiriciye veya AI (Yapay Zeka) ajanına aktarmak amacıyla hazırlanmıştır.
+
+🛠️ Teknoloji Yığını (Tech Stack)
+Platform: Android (Samsung Galaxy S23 ve türevleri için optimize edilmiştir)
+Framework: Qt 6 (C++ ve QML)
+Arayüz (UI): Qt Quick / QML
+Veritabanı: SQLite (Yerel Cihaz Depolaması)
+🏗️ Mimari ve Veri Yapısı (Architecture & Data Structure)
+Proje, klasik bir Frontend (QML) ve Backend (C++) ayrımına sahiptir.
+
+1. Backend: DatabaseManager (C++)
+Veritabanı işlemleri QSQLITE sürücüsü kullanılarak DatabaseManager sınıfı üzerinden yürütülür. Bu sınıf Q_INVOKABLE fonksiyonlar aracılığıyla doğrudan QML ortamına dbManager ismiyle sunulur.
+
+Tablo Yapıları:
+
+incomes (Gelirler): id, amount, date
+expenses (Giderler):
+id (INTEGER PRIMARY KEY)
+category (TEXT - Örn: Market, Sağlık)
+name (TEXT - Fişin veya Harcamanın Genel Başlığı)
+amount (REAL - Toplam Tutar)
+date (TEXT - YYYY-MM-DD HH:MM:SS formatında saniye bazlı tarih)
+color (TEXT - Kategoriye atanan HEX renk kodu)
+subitems (TEXT - JSON formatında string array. Fişin içerisindeki detaylı kalemleri barındırır. Örn: [{"name":"Süt","amount":100}, {"name":"Çay","amount":200}])
+2. Frontend: Main.qml & RingChart.qml
+Main.qml: Uygulamanın ana ekranıdır. Layout (ColumnLayout, RowLayout) mimarisi üzerine modern ve premium (Koyu Tema) bir tasarımla kurulmuştur. İçerisinde SwipeView, ScrollView ve Popup modüllerini barındırır.
+RingChart.qml: Saf QML Canvas API'si kullanılarak sıfırdan yazılmış interaktif bir dairesel grafiktir. Veritabanından gelen kategori toplamlarını alarak açı hesaplaması yapar ve dış çeperine yüzde (%) oranlarını yazar.
+✨ Mevcut Özellikler (Current Features)
+Haftalık ve Aylık Görüntüleme (SwipeView)
+
+Grafik üzerinde sağa/sola kaydırma (swipe) hareketiyle harcamalar haftalık moddan aylık moda geçirilebilir. Aylık modda ayın 1'i ile sonu arasındaki harcamalar hesaplanır.
+Geçmişe Yönelik Tarihçe (History Navigation)
+
+İlerleme çubuğunun üstündeki ◀ ve ▶ butonları ile veritabanında geçmiş haftalara gidilip "Geçen Hafta", "2 Hafta Önce" gibi dönemlere ait bakiye ve fişler incelenebilir.
+Gün Bazlı Filtreleme (Interactive Progress Bar)
+
+Haftalık çubuk üzerindeki günlere (Paz, Pzt vb.) tıklandığında alt kısımdaki liste anında filtrelenerek sadece o gün yapılan harcamaları listeler.
+Sınırsız Alt Kalemli Dinamik Gider Formu
+
+Bir gider eklenirken tek bir tutar girilebileceği gibi, + butonuna basılarak bir fişin alt kalemleri (Örn: Makarna 50₺, Çay 100₺) eklenebilir. Form bu tutarları otomatik toplayarak expenses tablosuna subitems JSON'ı olarak kaydeder. Liste üzerinde bu kalemler • (madde) işaretiyle gösterilir.
+Güvenlikli Düzenleme ve Silme
+
+Harcamalar anında düzenlenebilir. Silme işlemi yanlış tıklamaları önlemek amacıyla bir onay penceresi (deleteConfirmPopup) ile korunmuştur.
+🚀 GELECEK GÖREV (Future Task: AI Receipt Scanner)
+Görev Tanımı: Yapay Zeka (AI) Destekli Fiş/Fatura Tarama ve Otomatik Entegrasyon
+
+Amaç: Kullanıcının harcama girişini tamamen otomatize etmek.
+İşleyiş:
+Uygulamaya bir "Kamera / Fiş Tarat" butonu eklenecek.
+Kullanıcı market veya restoran fişinin fotoğrafını çekecek.
+Fotoğraf, bir Yapay Zeka Vision / OCR API'sine (Örn: Gemini Vision, GPT-4V veya Cloud Vision API) gönderilecek.
+AI, fişteki verileri analiz edecek;
+Faturanın Hangi Kategoriye ait olduğunu anlayacak (Örn: "Market").
+Tüm kalemleri ve fiyatlarını ayrıştıracak (Örn: "Makarna: 50 TL", "Çay: 45 TL").
+Toplam tutarı doğrulayacak.
+Analiz edilen bu veriler mevcut QML expensePopup formuna (ve subItemsModel içerisine) saniyeler içinde otomatik olarak doldurulacak. Kullanıcı sadece göz ucuyla kontrol edip "Kaydet" diyecek.
+Not: Bu görev implemente edilirken QML tarafında Kamera entegrasyonu (Qt Multimedia) ve C++ tarafında bir Network Manager (QNetworkAccessManager) yazılarak REST API isteklerinin yönetilmesi gerekecektir.
