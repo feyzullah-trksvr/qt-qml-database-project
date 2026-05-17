@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-
+    git deneme1213123
     QQmlApplicationEngine engine;
     QObject::connect(
         &engine,
